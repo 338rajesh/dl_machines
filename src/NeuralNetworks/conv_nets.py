@@ -7,14 +7,10 @@ from keras import layers, initializers, Model
 class ConvolutionalNetwork(NeuralNetwork):
     def __init__(self,
                  inp_shape: tuple,
-                 num_epochs: int = 10,
-                 loss=None,
-                 optimizer=None,
-                 verbose=1,
                  **kwargs,
                  ):
         # super().__init__(num_epochs, train_dataset, test_dataset, loss, optimizer, verbose)
-        super().__init__(num_epochs, loss, optimizer, verbose, **kwargs)
+        super().__init__(**kwargs)
         self.inp_shape = inp_shape
         return
 

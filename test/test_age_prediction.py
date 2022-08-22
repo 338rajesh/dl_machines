@@ -1,10 +1,10 @@
 import keras.activations
 import tensorflow as tf
-from keras.losses import SparseCategoricalCrossentropy
 from keras.optimizers import Adam, SGD
 from keras.activations import relu, linear
 from keras import layers
-from NeuralNetworks import neural_networks, dataset_ops, conv_nets, report
+from keras.losses import MeanAbsolutePercentageError
+from NeuralNetworks import dataset_ops, conv_nets, utils
 import os
 import numpy as np
 from data_sets_library import benchmarks
@@ -13,7 +13,7 @@ from data_sets_library import benchmarks
 #  Hyper-parameters
 # ====================
 
-NUM_EPOCHS = 10
+NUM_EPOCHS = 2
 BATCH_SIZE = 64
 
 WORKING_DIR = os.path.join(os.path.dirname(__file__), "age_prediction_test_results")
@@ -25,8 +25,11 @@ if not os.path.isdir(WORKING_DIR):
 #  Data preparation
 # ====================
 
-(train_x, train_y), (test_x, test_y) = benchmarks.load_age_prediction_data(20, 28)
-x, y = np.concatenate((train_x, test_x), axis=0), np.concatenate((train_y, test_y), axis=0)
+print(f"Loading data >>", end="", flush=True)
+x, y = benchmarks.load_20to50_400SamplesPerAge()
+print(f"\tDone!")
+
+utils.nparray_summary({"Images": x, "Labels": y})
 
 ids = dataset_ops.ImageDataSet(x, y)
 ids.normalize()
@@ -43,17 +46,18 @@ ids.summary()
 cnn_model = conv_nets.ConvolutionalNetwork(
     inp_shape=(128, 128, 3),
     num_epochs=NUM_EPOCHS,
-    loss=SparseCategoricalCrossentropy(from_logits=True),  # TODO
+    loss=MeanAbsolutePercentageError(),  # TODO
     optimizer=Adam(learning_rate=0.001),
     verbose=2,
     working_dir=WORKING_DIR,
-    model_name="AGE-PREDICTION-CNN-VGG"
+    model_name="AGE-PREDICTION-CNN-VGG",
+    regression=True,
 )
 
 cnn_model.make_vgg_cnn(
     num_blocks=2,
     num_dense_layers=0,
-    num_outputs=10,
+    num_outputs=1,
     cl_filters = (8, 16, 32),
     cl_droprate = (0.10, 0.15, 0.30),
     dl_units = (32,),
@@ -72,10 +76,10 @@ cnn_model.add_data_sets(
     test_ds=ids.test_ds
 )
 
-cnn_model.plot_examples(num_samples=25, cmap="gray")
+cnn_model.plot_examples(num_samples=16, plt_size=12.0)
 
-cnn_model.train()
+# cnn_model.train()
 
-cnn_model.plot_training_statistics()
+# cnn_model.plot_training_statistics()
 
 cnn_model.make_report()

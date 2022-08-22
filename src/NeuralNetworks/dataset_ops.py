@@ -3,15 +3,17 @@ from numpy.random import default_rng
 from tensorflow import data, keras
 from keras import layers
 from tensorflow import image
+from .utils import SimpleTable
 
 rng = default_rng()
 
 
 class ImageDataSet:
-    def __init__(self, images=None, labels=None, datype="float32"):
+    def __init__(self, images=None, labels=None, datype="float32", name=None):
         self.images = images
         self.labels = labels
         self.datype = datype
+        self.name = name
         if images is not None and labels is not None:
             assert images.shape[0] == labels.shape[0], "Inconsistency in the number of images and the number of labels."
 
@@ -21,6 +23,7 @@ class ImageDataSet:
         self.val_labels = None
         self.test_images = None
         self.test_labels = None
+
 
         self.train_ds = None
         self.val_ds = None
@@ -73,7 +76,7 @@ class ImageDataSet:
         self.val_labels = self.labels[self.num_tr_examples:kidx]
         self.test_images = self.images[kidx:]
         self.test_labels = self.labels[kidx:]
-        return
+        return self
 
     def prepare_tf_datasets(self, batch_size=64, buffer_factor=1):
         def make_ds(imgs, lbls):
@@ -91,19 +94,16 @@ class ImageDataSet:
         return self
 
     def summary(self):
-        print("="*50)
-        print(f"\t Image Dataset Summary")
-        print("="*50)
-        print(
-            f" {'Number of training Examples':.<40s}{self.train_images.shape[0]:<10d}")
-        print(
-            f" {'Number of validation Examples':.<40s}{self.val_images.shape[0]:<10d}")
-        print(
-            f" {'Number of test Examples':.<40s}{self.test_images.shape[0]:<10d}")
-        print(f" {'-'*40:40s}")
-        print(f" {'Number of total Examples':.<40s}{self.__len__():<10d}")
-        print("="*50)
-        return
+        content = [
+            ["", "Training Set",  "Validation Set", "Test Set"],
+            ["Number of examples", self.train_images.shape[0], self.val_images.shape[0], self.test_images.shape[0]],
+            ["Image shape", str(self.train_images.shape[1:]), str(self.val_images.shape[1:]), str(self.test_images.shape[1:])],
+        ]
+        if self.name is None:
+            self.name = ""
+        self.summary_table = SimpleTable(title=f"{self.name} Dataset Summary")(content=content)
+        print(self.summary_table)
+        return self
 
 
 class DataAugmentationLayer(layers.Layer):

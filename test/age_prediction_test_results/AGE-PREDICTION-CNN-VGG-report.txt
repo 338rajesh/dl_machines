@@ -1,0 +1,58 @@
+************************************************************************************************************************
+                                                         REPORT                                                         
+************************************************************************************************************************
+Time: 16:18:59                                                                                          Date: 17-08-2022
+
+HYPERPARAMETERS:
+----------------
+	Number of epochs: 10
+	Batch Size: 64
+	Optimizer: Adam
+	Optimizer Learning Rate: 0.001000
+	Loss Function: mean_absolute_percentage_error
+
+MODEL SUMMARY:
+--------------
+	Model: "AGE-PREDICTION-CNN-VGG"
+	________________________________________________________________________________________________________________________
+	 Layer (type)                                         Output Shape                                    Param #           
+	========================================================================================================================
+	 input_1 (InputLayer)                                 [(None, 128, 128, 3)]                           0                 
+	                                                                                                                        
+	 conv2d (Conv2D)                                      (None, 128, 128, 8)                             224               
+	                                                                                                                        
+	 batch_normalization (BatchNormalization)             (None, 128, 128, 8)                             32                
+	                                                                                                                        
+	 conv2d_1 (Conv2D)                                    (None, 128, 128, 8)                             584               
+	                                                                                                                        
+	 batch_normalization_1 (BatchNormalization)           (None, 128, 128, 8)                             32                
+	                                                                                                                        
+	 max_pooling2d (MaxPooling2D)                         (None, 64, 64, 8)                               0                 
+	                                                                                                                        
+	 dropout (Dropout)                                    (None, 64, 64, 8)                               0                 
+	                                                                                                                        
+	 conv2d_2 (Conv2D)                                    (None, 64, 64, 16)                              1168              
+	                                                                                                                        
+	 batch_normalization_2 (BatchNormalization)           (None, 64, 64, 16)                              64                
+	                                                                                                                        
+	 conv2d_3 (Conv2D)                                    (None, 64, 64, 16)                              2320              
+	                                                                                                                        
+	 batch_normalization_3 (BatchNormalization)           (None, 64, 64, 16)                              64                
+	                                                                                                                        
+	 max_pooling2d_1 (MaxPooling2D)                       (None, 32, 32, 16)                              0                 
+	                                                                                                                        
+	 dropout_1 (Dropout)                                  (None, 32, 32, 16)                              0                 
+	                                                                                                                        
+	 flatten (Flatten)                                    (None, 16384)                                   0                 
+	                                                                                                                        
+	 dense (Dense)                                        (None, 10)                                      163850            
+	                                                                                                                        
+	========================================================================================================================
+	Total params: 168,338
+	Trainable params: 168,242
+	Non-trainable params: 96
+	________________________________________________________________________________________________________________________
+
+TRAINING HISTORY:
+-----------------
+	Training time:  0.000 seconds
