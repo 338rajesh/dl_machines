@@ -7,6 +7,11 @@ import numpy as np
 import datetime
 from contextlib import ContextDecorator
 
+
+def unravel_list(a):
+    return [i for j in a for i in j]
+
+
 class StylerBox:
     def __init__(self, string=None):
         self.string = string
@@ -47,12 +52,12 @@ class ProgressBar:
     def __init__(self, num_iters, header=None, bar_prefix="") -> None:
         self._t0 = time.time()
         self._n = num_iters
-        self.term_cols = (os.get_terminal_size().columns)*0.15
+        self.term_cols = (os.get_terminal_size().columns) * 0.15
         self.bar_prefix = bar_prefix
 
         if header is not None:
             print(header)
-        print(f"[{'.'*int(self.term_cols/self._n)}] loop started..!", end="\r")
+        print(f"[{'.' * int(self.term_cols / self._n)}] loop started..!", end="\r")
 
     def update(self, i: int, bar_prefix: str = None) -> None:
         """_summary_
@@ -62,13 +67,13 @@ class ProgressBar:
         """
         if bar_prefix is None:
             bar_prefix = self.bar_prefix
-        tc_points = int(((i+1)/self._n) * self.term_cols)
-        avg_time = (time.time()-self._t0)/(i+1)
-        percent = ((i+1)/self._n)*100
+        tc_points = int(((i + 1) / self._n) * self.term_cols)
+        avg_time = (time.time() - self._t0) / (i + 1)
+        percent = ((i + 1) / self._n) * 100
         #
         completion = f"{percent :04.2f}%"
-        remaining_time = f" | TTF: {avg_time*(self._n-(i+1)):04.1f}s"
-        bar_str = f"{bar_prefix}[{'='*(tc_points)+'>'+'.'*int(self.term_cols-tc_points)}]"
+        remaining_time = f" | TTF: {avg_time * (self._n - (i + 1)):04.1f}s"
+        bar_str = f"{bar_prefix}[{'=' * (tc_points) + '>' + '.' * int(self.term_cols - tc_points)}]"
         print(f"{bar_str}{completion} {remaining_time}", end="\r")
 
 
@@ -95,13 +100,13 @@ class SimpleTable:
     """
 
     def __init__(
-        self,
-        vertical_marker: str = "|",
-        horizontal_marker: str = "_",
-        alignment: str = "^",
-        line_len: int = 80,
-        floats: int = 3,
-        title: str = None,
+            self,
+            vertical_marker: str = "|",
+            horizontal_marker: str = "_",
+            alignment: str = "^",
+            line_len: int = 80,
+            floats: int = 3,
+            title: str = None,
     ):
         self.vmarker = vertical_marker
         self.hmarker = horizontal_marker
@@ -117,7 +122,7 @@ class SimpleTable:
         self.ncols = None
 
     _superscore = u'\u203e'
-    
+
     def _make_hline(self, top=True, bot=True):
         if self.col_widths is None:
             raise ValueError(error_msg("col_wdiths are not available!"))
@@ -125,11 +130,11 @@ class SimpleTable:
         _hl_thread = "-"
         if top:
             self._hline_top = f"{_hl_symb}" + f"{_hl_symb}".join(
-                [f"{_hl_thread*i}" for i in self.col_widths]
+                [f"{_hl_thread * i}" for i in self.col_widths]
             ) + f"{_hl_symb}"
         if bot:
             self._hline_bottom = f"{_hl_symb}" + f"{_hl_symb}".join(
-                [f"{_hl_thread*i}" for i in self.col_widths]
+                [f"{_hl_thread * i}" for i in self.col_widths]
             ) + f"{_hl_symb}"
         return self
 
@@ -155,7 +160,7 @@ class SimpleTable:
                 self.content[_i][_j] = f"{_afield:{fmt_prefix}}"
         return self
 
-    def _make_content_column_type(self,):
+    def _make_content_column_type(self, ):
         _col_type_content = []
         for a_col in zip(*self.content):
             _col_type_content.append(list(a_col))
@@ -165,12 +170,12 @@ class SimpleTable:
     _acceptable_content_type = ("COLUMN", "ROW")
 
     def __call__(
-        self,
-        content: list[list] = None,
-        content_type="COLUMN",
-        make_header: bool = True,
-        make_footer: bool = True,
-        foot_notes: dict = None,
+            self,
+            content: list[list] = None,
+            content_type="COLUMN",
+            make_header: bool = True,
+            make_footer: bool = True,
+            foot_notes: dict = None,
     ):
         self.content = content
         assert content_type in self._acceptable_content_type, error_msg(
@@ -188,7 +193,7 @@ class SimpleTable:
         #
         _vmrkr = f"{self.vmarker}"
         for arow_elements in zip(*self.content):
-            self.rows.append(f"{_vmrkr}" + f"{_vmrkr}".join(arow_elements)+f"{_vmrkr}")
+            self.rows.append(f"{_vmrkr}" + f"{_vmrkr}".join(arow_elements) + f"{_vmrkr}")
         #
         self.row_len = sum([len(i) for i in self.rows[0]])
         if make_header:
@@ -214,7 +219,8 @@ class Report:
     """_summary_
     """
 
-    def __init__(self, file_path: str = None, mow: str = "w", line_len: int = 90, line_marker="=", subhead_marker="-", report_title='REPORT'):
+    def __init__(self, file_path: str = None, mow: str = "w", line_len: int = 90, line_marker="=", subhead_marker="-",
+                 report_title='REPORT'):
         self.report: list = []
         self.fpath = file_path
         self.mow = mow
@@ -228,7 +234,7 @@ class Report:
             marker = self.line_marker
         if not line_len:
             line_len = self.line_len
-        return f"{marker*line_len}"
+        return f"{marker * line_len}"
 
     def init(self, title='Report'):
 
@@ -240,11 +246,11 @@ class Report:
         now_time = f"Time: {now.strftime('%H:%M:%S')}"
         now_date = f"Date: {now.strftime('%d-%m-%Y')}"
         self.report.append(
-            f"{now_time}{' '*(self.line_len-len(now_time+now_date))}{now_date}\n\n"
+            f"{now_time}{' ' * (self.line_len - len(now_time + now_date))}{now_date}\n\n"
         )
 
     def sub_heading(self, sh: str):
-        return f"\n\n{sh}\n{self.sh_marker*len(sh)}"
+        return f"\n\n{sh}\n{self.sh_marker * len(sh)}"
 
 
 class TrainingReport(Report):
@@ -277,7 +283,7 @@ class TrainingReport(Report):
     def add_model_summary(self, nn_model):
         self.report.append(self.sub_heading(f"MODEL SUMMARY:"))
         nn_model.summary(print_fn=lambda x: self.report.append(
-            "\t"+x), line_length=self.line_len)
+            "\t" + x), line_length=self.line_len)
         return self
 
     def add_model_performance(self, nn_model):
@@ -287,22 +293,28 @@ class TrainingReport(Report):
         performance_info = [
             ["Epochs", ] + nn_model.training_report["epochs"],
             ["Iterations", ] + nn_model.training_report["iters"],
-            ["TR-loss"] + nn_model.training_report["loss"],
+            ["TRN-loss"] + nn_model.training_report["loss"],
             ["VAL-loss"] + nn_model.validation_report["loss"],
         ]
         #
         for (_i, a_metric) in enumerate(metrics):
             performance_info.append(
-                [f"tr-metric-{_i+1}", ] + nn_model.training_report[a_metric]
+                [f"tr-metric-{_i + 1}", ] + nn_model.training_report[a_metric]
             )
         #
         for (_j, a_metric) in enumerate(metrics):
             performance_info.append(
-                [f"val-metric-{_j+1}", ] + nn_model.validation_report[a_metric]
+                [f"val-metric-{_j + 1}", ] + nn_model.validation_report[a_metric]
             )
+        performance_info.append(["Tr-Time", ] + nn_model.training_report["training_time"], )
         metrics_foot_notes = {
-            f"metric-{i+1}": _ametric for (i, _ametric) in enumerate(metrics)
+            f"metric-{i + 1}": _ametric for (i, _ametric) in enumerate(metrics)
         }
+        metrics_foot_notes.update({
+            "TRN-loss": "Training loss",
+            "VAL-loss": "Validation loss",
+            "Tr-Time": "Training time for the respective epoch (in seconds)",
+        })
         #
         self.report.append(
             SimpleTable(floats=4)(
@@ -314,13 +326,15 @@ class TrainingReport(Report):
             )
         )
         #
+        self.report.append(f"\nTotal Training Time: {sum(nn_model.training_report['training_time']):0.3f} seconds\n")
+        #
         self.report.append(self.sub_heading(f"TEST PERFORMANCE:"))
         test_performance = [
             ["loss"] + nn_model.testing_report["loss"],
         ]
         for a_metric in nn_model.metrics:
             test_performance.append(
-                [f"metric-{_i+1}", ] + nn_model.testing_report[a_metric.name]
+                [f"metric-{_i + 1}", ] + nn_model.testing_report[a_metric.name]
             )
         self.report.append(SimpleTable()(test_performance))
         #

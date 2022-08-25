@@ -29,7 +29,7 @@ x, y = np.concatenate((train_x, test_x), axis=0), np.concatenate((train_y, test_
 
 ids = dataset_ops.ImageDataSet(x, y)
 ids.normalize()
-ids.set_data_type(datype="float32")
+ids.set_data_type(data_type="float32")
 ids.add_channel_dim()
 ids.shuffle()
 ids.split_train_val_test(fractions=(0.835, 0.155, 0.01))
@@ -47,7 +47,7 @@ cnn_model = conv_nets.ConvolutionalNetwork(
     model_name="MNIST-DIGITS-CNN-VGG"
 )
 
-cnn_model.make_colnvolutional_layers(
+cnn_model.make_convolutional_layers(
     num_layers=3,
     num_filters=(16, 32, 64,),
     kernel_sizes=((3, 3), (3, 3), (3, 3),),
@@ -83,7 +83,7 @@ cnn_model.add_data_sets(
     test_ds=ids.test_ds
 )
 
-cnn_model.plot_examples(num_samples=25, cmap="gray")
+cnn_model.plot_examples(num_samples=25, c_map="gray")
 
 cnn_model.train()
 

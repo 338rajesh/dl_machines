@@ -1,3 +1,4 @@
 test/_results/*
 test/_archives/*
 src/NeuralNetworks/__pycache__/*
+.idea/

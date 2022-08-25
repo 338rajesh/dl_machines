@@ -48,7 +48,7 @@ cnn_model = neural_networks.ConvolutionalNetwork(
     verbose=2,
 )
 
-cnn_model.make_colnvolutional_layers(
+cnn_model.make_convolutional_layers(
     num_layers=6,
     num_filters=(32, 32, 64, 64, 128, 128,),
     kernel_sizes=((3, 3), (3, 3), (3, 3), (3, 3), (3, 3), (3, 3),),

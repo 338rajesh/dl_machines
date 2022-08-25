@@ -50,7 +50,7 @@ cnn_model = neural_networks.ConvolutionalNetwork(
 # ====================
 #   Building model
 # ====================
-cnn_model.make_colnvolutional_layers(
+cnn_model.make_convolutional_layers(
     num_layers=5,
     num_filters=(16, 32, 32, 64, 64),
     kernel_sizes=((3, 3), (3, 3), (3, 3), (3, 3), (3, 3),),
@@ -88,7 +88,7 @@ cnn_model.plot(path=os.path.join(
 cnn_model.add_data_sets(train_ds=train_dataset, val_ds=cv_dataset, test_ds=test_dataset)
 
 cnn_model.plot_examples(num_samples=25, image_path=os.path.join(
-    WORKING_DIR, f"sample_examples.png"), cmap="gray")
+    WORKING_DIR, f"sample_examples.png"), c_map="gray")
 
 cnn_model.train()
 

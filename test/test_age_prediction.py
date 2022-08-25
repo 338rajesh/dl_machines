@@ -33,7 +33,7 @@ utils.nparray_summary({"Images": x, "Labels": y})
 
 ids = dataset_ops.ImageDataSet(x, y)
 ids.normalize()
-ids.set_data_type(datype="float32")
+ids.set_data_type(data_type="float32")
 ids.shuffle()
 ids.split_train_val_test(fractions=(0.80, 0.10, 0.10))
 ids.prepare_tf_datasets(batch_size=BATCH_SIZE, buffer_factor=1)

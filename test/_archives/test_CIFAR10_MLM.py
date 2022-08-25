@@ -32,7 +32,7 @@ x, y = np.concatenate((train_x, test_x), axis=0), np.concatenate(
 
 ids = dataset_ops.ImageDataSet(x, y)
 ids.normalize()
-ids.set_data_type(datype="float32")
+ids.set_data_type(data_type="float32")
 ids.add_channel_dim()
 ids.shuffle()
 ids.split_train_val_test(fractions=(0.835, 0.155, 0.01))
